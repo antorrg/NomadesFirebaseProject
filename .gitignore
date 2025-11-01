@@ -137,3 +137,12 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+# Firebase y Cloud Functions
+.firebase/
+firebase-debug.log
+/functions/node_modules  # Repetido, pero asegura que las dependencias de Functions se ignoran
+/functions/lib           # Ignora el código JavaScript compilado (si usas TypeScript)
+
+# Configuración local de Hosting
+.firebase-tmp
+proyectopreactSdk2.json
