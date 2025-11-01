@@ -1,10 +1,7 @@
 import { AuxValid } from "./helpers/auxValid.js";
-function isFieldSchema(s) {
-    return typeof s === "object" && s !== null && "type" in s;
-}
-function isSchema(s) {
-    return typeof s === "object" && s !== null && !("type" in s);
-}
+
+// Importar la clase Validator para acceder a todos los metodos disponibles
+
 export class Validator {
     static validatorBody(data, schema, maxDepth = 10) {
             try {
@@ -48,6 +45,19 @@ export class Validator {
         OBJECT_ID: /^[0-9a-fA-F]{24}$/, // ObjectId de MongoDB
         FIREBASE_ID: /^[A-Za-z0-9_-]{20}$/, // Firebase push ID
     };
+    static splitObjectProps(obj, propsToExtract = []) {
+        const { rest, extracted } = Object.entries(obj).reduce(
+            (acc, [key, value]) => {
+            if (propsToExtract.includes(key)) acc.extracted[key] = value
+            else acc.rest[key] = value
+            return acc
+            },
+            { rest: {}, extracted: {} }
+        )
+
+        return {rest, ...extracted }
+    }
+
     static #validateStructure(data, schema, path, maxDepth = 20, depth = 0) {
         if (depth > maxDepth) {
             throw new Error(`Schema validation exceeded maximum depth at ${path || "root"}`);
@@ -105,4 +115,11 @@ export class Validator {
         }
         return AuxValid.validateValue(value, type, path, null, sanitize);
     }
+}
+
+function isFieldSchema(s) {
+    return typeof s === "object" && s !== null && "type" in s;
+}
+function isSchema(s) {
+    return typeof s === "object" && s !== null && !("type" in s);
 }
